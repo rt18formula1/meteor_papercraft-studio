@@ -1,0 +1,15 @@
+.build/
+.DS_Store
+# Generated macOS app bundles and archives
+dist/
+# Local Python environments and caches
+.venv/
+**/__pycache__/
+# Next.js local dependencies and build output
+website/node_modules/
+website/.next/
+# Local diagnostic captures
+build.log
+*.log
+# Temporary screenshots are kept outside the product source
+スクリーンショット *.png
