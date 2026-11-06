@@ -51,8 +51,9 @@ enum AppMain {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     var window: NSWindow!
+    private var controller: StudioController!
     func applicationDidFinishLaunching(_ notification: Notification) {
-        let controller = StudioController()
+        controller = StudioController()
         window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 1040, height: 760), styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: false)
         window.title = "Meteor PaperCraft Studio"
         window.minSize = NSSize(width: 850, height: 620)
@@ -60,6 +61,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
         NSApplication.shared.activate(ignoringOtherApps: true)
+    }
+    func application(_ application: NSApplication, openFiles filenames: [String]) {
+        guard let first = filenames.first else { return }
+        controller.openProjectFile(URL(fileURLWithPath: first))
+        application.reply(toOpenOrPrint: .success)
     }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
@@ -267,6 +273,9 @@ final class StudioController: NSViewController {
     @objc private func openProject() {
         let panel=NSOpenPanel();panel.allowedContentTypes=[UTType(filenameExtension:"meteorcraft") ?? .json,.json];panel.allowsMultipleSelection=false
         guard panel.runModal() == .OK, let url=panel.url else{return}
+        openProjectFile(url)
+    }
+    func openProjectFile(_ url: URL) {
         do {
             let project=try JSONDecoder().decode(StudioProject.self,from:Data(contentsOf:url))
             var loaded:[PhotoItem]=[];var missing:[String]=[]

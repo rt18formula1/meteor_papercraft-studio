@@ -6,10 +6,13 @@
 
 - Base directory: `website`
 - Build command: `npm run build`
+- Publish directory: `.next`
 - Node.js: 20
 - Next.js用Netlifyプラグイン
 
 GitHubへPush後、Netlifyで「Import an existing project」から対象リポジトリを選択し、設定を自動検出させる。`netlify.toml`があるため、Base directoryとBuild commandは手入力不要。公開URLが確定したら、アプリのダウンロード導線とサイトのCTAへ反映する。
+
+既存のNetlifyサイトでPublish directoryがUI側から`website`に固定されている場合は、Site configuration → Build & deploy → Continuous deployment → Build settingsでPublish directoryを`.next`へ変更する。Base directoryが`website`のため、`website`をPublish directoryにするとプラグインが「publish directory cannot be the same as base directory」で停止する。
 
 ## 公開後の運用
 

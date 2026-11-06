@@ -3,7 +3,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP_NAME="Meteor PaperCraft Studio"
-APP="$ROOT/dist/$APP_NAME.app"
+FINAL_APP="$ROOT/dist/$APP_NAME.app"
+APP="$ROOT/dist/.Meteor PaperCraft Studio.building.app"
 CONTENTS="$APP/Contents"
 
 rm -rf "$APP"
@@ -63,9 +64,26 @@ cat > "$CONTENTS/Info.plist" <<'PLIST'
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>LSApplicationCategoryType</key><string>public.app-category.graphics-design</string>
+  <key>CFBundleDocumentTypes</key>
+  <array><dict>
+    <key>CFBundleTypeName</key><string>Meteor PaperCraft Project</string>
+    <key>CFBundleTypeRole</key><string>Editor</string>
+    <key>LSHandlerRank</key><string>Owner</string>
+    <key>LSItemContentTypes</key><array><string>studio.meteor.papercraft.project</string></array>
+    <key>CFBundleTypeExtensions</key><array><string>meteorcraft</string></array>
+  </dict></array>
+  <key>UTExportedTypeDeclarations</key>
+  <array><dict>
+    <key>UTTypeIdentifier</key><string>studio.meteor.papercraft.project</string>
+    <key>UTTypeDescription</key><string>Meteor PaperCraft Studio Project</string>
+    <key>UTTypeConformsTo</key><array><string>public.json</string></array>
+    <key>UTTypeTagSpecification</key><dict><key>public.filename-extension</key><array><string>meteorcraft</string></array><key>public.mime-type</key><string>application/json</string></dict>
+  </dict></array>
 </dict></plist>
 PLIST
 
 xattr -cr "$APP"
 codesign --force --deep --sign - "$APP"
-echo "Built: $APP"
+rm -rf "$FINAL_APP"
+mv "$APP" "$FINAL_APP"
+echo "Built: $FINAL_APP"
